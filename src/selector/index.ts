@@ -3,39 +3,59 @@
 import $ = require('jquery');
 import State from './state';
 
+/**
+ * @class Selector
+ * @description Custom selector component
+ */
 export default class Selector {
+    public static EVENTS: any = {
+        INIT: 'init',
+        BEFORE_SET_VALUE_LIST: 'beforeSetValueList',
+        AFTER_SET_VALUE_LIST: 'afterSetValueList',
+        BEFORE_SET_VALUE: 'beforeSetValue',
+        AFTER_SET_VALUE: 'afterSetValue',
+        BEFORE_RENDER: 'beforeRender',
+        AFTER_RENDER: 'afterRender',
+    };
+
     private _element: any;
     private _state: State;
 
+    /**
+     * @constructor
+     * @param {String} selectId - jquery selector
+     */
     public constructor(selectId: string) {
         this._element = $(selectId);
         this._state = new State();
         this._trigger(Selector.EVENTS.INIT);
     }
 
-    public static get EVENTS() : any {
-        return {
-            INIT: 'init',
-            BEFORE_SET_VALUE_LIST: 'beforeSetValueList',
-            AFTER_SET_VALUE_LIST: 'afterSetValueList',
-            BEFORE_SET_VALUE: 'beforeSetValue',
-            AFTER_SET_VALUE: 'afterSetValue',
-            BEFORE_RENDER: 'beforeRender',
-            AFTER_RENDER: 'afterRender',
-        };
-    }
-
+    /**
+     * Returns native jQuery element
+     * @returns {JQuery}
+     */
     public getElement(): any {
         return this._element;
     }
 
+    /**
+     * Sets event listener
+     * @param {Function} listener
+     */
     public setListener(listener: Function): void {
         const events = Selector.EVENTS;
         Object.keys(events).forEach((eventKey) => {
-            this.getElement().on(events[eventKey], (event: any, ...data: Array<any>) => listener(event.type, data));
+            this.getElement().on(
+                events[eventKey],
+                (event: any, ...data: Array<any>) => listener(event.type, data));
         });
     }
 
+    /**
+     * Sets option value list
+     * @param {Object[]} values
+     */
     public setValueList(values: Array<Object>): void {
         this._trigger(Selector.EVENTS.BEFORE_SET_VALUE_LIST, values);
         this._state.setValueList(values);
@@ -43,21 +63,39 @@ export default class Selector {
         this._trigger(Selector.EVENTS.AFTER_SET_VALUE_LIST, values);
     }
 
-    public setValue(value: string): void {
+    /**
+     * Sets selector value
+     * @param {String|Number} value
+     */
+    public setValue(value: string|number): void {
         this._trigger(Selector.EVENTS.BEFORE_SET_VALUE, value);
         this._state.setValue(value);
         this._render();
         this._trigger(Selector.EVENTS.AFTER_SET_VALUE, value);
     }
 
-    public getValue(): string {
+    /**
+     * Returns selector value
+     * @returns {String|Number|null}
+     */
+    public getValue(): string|number {
         return this._state.getValue();
     }
 
+    /**
+     * Triggers given component event with params
+     * @param {String} event name
+     * @param {Array<*>} [params] event data
+     * @private
+     */
     private _trigger(event: string, params?: any) {
         this.getElement().trigger(event, params);
     }
 
+    /**
+     * Component render method
+     * @private
+     */
     private _render(): void {
         this._trigger(Selector.EVENTS.BEFORE_RENDER);
         this.getElement().empty();
