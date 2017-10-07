@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Selector</title>
+
+    <style>
+        .events-log {
+            width: 500px;
+            height: 150px;
+        }
+        .value-links a {
+            padding-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Selector</h2>
+    <select></select>
+
+    <div>
+        <h3>Установка списка значений</h3>
+        <a id="set-values-list" href="#">установить значения опций для компонента</a>
+        <pre id="values-list">
+            [
+                {label: 'Бублик', value: '1'},
+                {label: 'Крендель', value: '2'},
+                {label: 'Булочка', value: '3', active: true},
+                {label: 'Ватрушка', value: '4'}
+            ]
+        </pre>
+
+        <h3>Установка текущего значения</h3>
+        <div class="value-links">
+            <a id="switch-value1" name="1" href="#">Бублик</a>
+            <a id="switch-value2" name="2" href="#">Крендель</a>
+            <a id="switch-value3" name="3" href="#">Булочка</a>
+            <a id="switch-value4" name="4" href="#">Ватрушка</a>
+        </div>
+        <div>
+            <span>Текущее выбранное значение:</span>
+            <span id="current-value"></span>
+        </div>
+
+        <h3>События</h3>
+        <textarea id="events-log" class="events-log"></textarea>
+    </div>
+
+    <script src="./dist/bundle.js" ></script>
+</body>
+</html>
