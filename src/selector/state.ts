@@ -22,6 +22,12 @@ export default class State {
      */
     public setValueList(values: Array<Object|String>): void {
         this._options = values.map((v) => new Option(v));
+
+        const hasActiveOption = this.getValuesList().some((option) => option.isActive());
+
+        if(!hasActiveOption && this.getValuesList().length) {
+            this._options[0].makeActive();
+        }
     }
 
     /**
@@ -37,10 +43,9 @@ export default class State {
      * @param {String|Number} value
      */
     public setValue(value: string|number): void {
-        this._options.forEach((option) => option.makeInactive());
-        this._options
-            .filter((option) => option.hasValue(value))
-            .map((option) => option.makeActive());
+         this.getValuesList().forEach((option) => {
+            option.hasValue(value) ? option.makeActive() : option.makeInactive();
+         });
     }
 
     /**
@@ -48,7 +53,7 @@ export default class State {
      * @returns {String|Number|null}
      */
     public getValue(): string|number|null {
-        const activeOption = this._options.filter((option) => option.isActive())[0];
+        const activeOption = this.getValuesList().filter((option) => option.isActive())[0];
         return activeOption ? activeOption.value : null;
     }
 };
