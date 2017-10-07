@@ -1,6 +1,6 @@
 'use strict';
 
-import $ from 'jquery';
+import $ = require('jquery');
 import Selector from './selector/index';
 
 (function() {
@@ -8,7 +8,7 @@ import Selector from './selector/index';
 
     const eventsLog = $('#events-log');
 
-    selector.setListener((event, data) => {
+    selector.setListener((event: string, data: any) => {
         eventsLog.append(event);
         eventsLog.append('\n');
         eventsLog.append(JSON.stringify(data));

@@ -1,16 +1,19 @@
 'use strict';
 
-import $ from 'jquery';
+import $ = require('jquery');
 import State from './state';
 
 export default class Selector {
-    constructor(selectId) {
+    private _element: any;
+    private _state: State;
+
+    public constructor(selectId: string) {
         this._element = $(selectId);
         this._state = new State();
-        this._trigger(this.constructor.EVENTS.INIT);
+        this._trigger(Selector.EVENTS.INIT);
     }
 
-    static get EVENTS() {
+    public static get EVENTS() : any {
         return {
             INIT: 'init',
             BEFORE_SET_VALUE_LIST: 'beforeSetValueList',
@@ -22,50 +25,50 @@ export default class Selector {
         };
     }
 
-    getElement() {
+    public getElement(): any {
         return this._element;
     }
 
-    setListener(listener=() => {}) {
-        const events = this.constructor.EVENTS;
+    public setListener(listener: Function): void {
+        const events = Selector.EVENTS;
         Object.keys(events).forEach((eventKey) => {
-            this.getElement().on(events[eventKey], (event, ...data) => listener(event.type, data));
+            this.getElement().on(events[eventKey], (event: any, ...data: Array<any>) => listener(event.type, data));
         });
     }
 
-    setValueList(values=[]) {
-        this._trigger(this.constructor.EVENTS.BEFORE_SET_VALUE_LIST, values);
+    public setValueList(values: Array<Object>): void {
+        this._trigger(Selector.EVENTS.BEFORE_SET_VALUE_LIST, values);
         this._state.setValueList(values);
         this._render();
-        this._trigger(this.constructor.EVENTS.AFTER_SET_VALUE_LIST, values);
+        this._trigger(Selector.EVENTS.AFTER_SET_VALUE_LIST, values);
     }
 
-    setValue(value) {
-        this._trigger(this.constructor.EVENTS.BEFORE_SET_VALUE, value);
+    public setValue(value: string): void {
+        this._trigger(Selector.EVENTS.BEFORE_SET_VALUE, value);
         this._state.setValue(value);
         this._render();
-        this._trigger(this.constructor.EVENTS.AFTER_SET_VALUE, value);
+        this._trigger(Selector.EVENTS.AFTER_SET_VALUE, value);
     }
 
-    getValue() {
+    public getValue(): string {
         return this._state.getValue();
     }
 
-    _trigger(event, params) {
+    private _trigger(event: string, params?: any) {
         this.getElement().trigger(event, params);
     }
 
-    _render() {
-        this._trigger(this.constructor.EVENTS.BEFORE_RENDER);
+    private _render(): void {
+        this._trigger(Selector.EVENTS.BEFORE_RENDER);
         this.getElement().empty();
         this._state.getValuesList().forEach((option) => {
             const $option = $('<option/>')
                 .val(option.value)
                 .text(option.label)
-                .attr('selected', option.isActive());
+                .prop('selected', option.isActive());
 
             this.getElement().append($option);
         });
-        this._trigger(this.constructor.EVENTS.AFTER_RENDER);
+        this._trigger(Selector.EVENTS.AFTER_RENDER);
     }
 }

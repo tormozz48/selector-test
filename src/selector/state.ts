@@ -3,26 +3,28 @@
 import Option from './option';
 
 export default class State {
-    constructor() {
+    private _options: Array<Option>;
+
+    public constructor() {
         this._options = [];
     }
 
-    setValueList(values) {
+    public setValueList(values: Array<Object>): void {
         this._options = values.map((v) => new Option(v));
     }
 
-    getValuesList() {
+    public getValuesList(): Array<Option> {
         return this._options;
     }
 
-    setValue(value) {
+    public setValue(value: string): void {
         this._options.forEach((option) => option.makeInactive());
         this._options
             .filter((option) => option.hasValue(value))
             .map((option) => option.makeActive());
     }
 
-    getValue() {
+    public getValue() {
         const activeOption = this._options.filter((option) => option.isActive())[0];
         return activeOption ? activeOption.value : null;
     }

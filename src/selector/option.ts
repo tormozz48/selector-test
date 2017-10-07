@@ -1,7 +1,11 @@
 'use strict';
 
 export default class Option {
-    constructor(option) {
+    private _label: string;
+    private _value: string;
+    private _active: boolean;
+
+    public constructor(option: any) {
         if (typeof option === 'string') {
             option = {label: option, value: option};
         }
@@ -11,27 +15,27 @@ export default class Option {
         this._active = option.active;
     }
 
-    get label() {
+    public get label(): string {
         return this._label;
     }
 
-    get value() {
+    public get value(): string {
         return this._value;
     }
 
-    hasValue(value) {
+    public hasValue(value: string): boolean {
         return this.value === value;
     }
 
-    isActive() {
-        return this._active;
+    public isActive(): boolean {
+        return Boolean(this._active);
     }
 
-    makeActive() {
+    public makeActive(): void {
         this._active = true;
     }
 
-    makeInactive() {
+    public makeInactive(): void {
         this._active = false;
     }
 };
