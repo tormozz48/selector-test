@@ -1,0 +1,23 @@
+{
+  "name": "selector",
+  "version": "1.0.0",
+  "description": "test application example ",
+  "main": "index.js",
+  "scripts": {
+    "webpack": "webpack --config webpack.config.js",
+    "start": "webpack-dev-server --open"
+  },
+  "keywords": [
+    "typescript",
+    "selector"
+  ],
+  "author": "tormozz48",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1"
+  }
+}
