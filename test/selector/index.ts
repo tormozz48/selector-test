@@ -1,16 +1,18 @@
 'use strict';
 
 import $ = require('jquery');
-import * as sinon from 'sinon';
+
 import * as chai from 'chai';
+import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 
-import State from '../../src/state';
 import Selector from '../../src/index';
+import State from '../../src/state';
+
 
 chai.use(sinonChai);
 
-//почему-то не завелся chai.assert c "sinon-chai"
+// почему-то не завелся chai.assert c "sinon-chai"
 const expect = chai.expect;
 
 describe('src/selector/index', () => {
@@ -26,7 +28,7 @@ describe('src/selector/index', () => {
             val: sandbox.stub().returnsThis(),
             text: sandbox.stub().returnsThis(),
             prop: sandbox.stub().returnsThis(),
-            on: sandbox.stub()
+            on: sandbox.stub(),
         };
         sandbox.stub(Selector.prototype, 'get$').returns($stub.constructor);
         sandbox.stub(Selector.prototype, 'getElement').returns($stub);
@@ -38,13 +40,13 @@ describe('src/selector/index', () => {
         it('should create state', () => {
             sandbox.stub(State, 'create');
 
-            const selector = new Selector('some-selector');
+            new Selector('some-selector');
 
             expect(State.create).to.be.calledOnce;
         });
 
         it('should initialize $ instance on given selector', () => {
-            const selector = new Selector('some-selector');
+            new Selector('some-selector');
 
             expect($stub.constructor).to.be.calledOnce;
             expect($stub.constructor).to.be.calledWith('some-selector');
@@ -98,7 +100,7 @@ describe('src/selector/index', () => {
             selector = new Selector('some-selector');
             selector.setValueList([
                 {label: 'foo1', value: 'bar1', active: true},
-                {label: 'foo2', value: 'bar2'}
+                {label: 'foo2', value: 'bar2'},
             ]);
         });
 

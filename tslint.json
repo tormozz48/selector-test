@@ -19,6 +19,7 @@
         "trace"
       ]
     },
+    "no-unused-expression": [true, "allow-fast-null-checks", "allow-new"],
     "object-literal-sort-keys": false,
     "quotemark": [true, "single"],
     "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"]

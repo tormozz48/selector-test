@@ -46,7 +46,7 @@ export default class Selector {
      * Sets event listener
      * @param {Function} listener
      */
-    public setListener(listener: () => void): void {
+    public setListener(listener: (type: string, data: any[]) => void): void {
         const events = Selector.EVENTS;
         Object.keys(events).forEach((eventKey) => {
             this.getElement().on(

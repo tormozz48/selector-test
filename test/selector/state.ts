@@ -16,7 +16,7 @@ describe('src/selector/state', () => {
 
             state.setValueList([
                 {label: 'foo1', value: 'bar1'},
-                {label: 'foo2', value: 'bar2', active: true}
+                {label: 'foo2', value: 'bar2', active: true},
             ]);
 
             assert.lengthOf(state.getValuesList(), 2);
@@ -29,7 +29,7 @@ describe('src/selector/state', () => {
 
             state.setValueList([
                 {label: 'foo1', value: 'bar1'},
-                {label: 'foo2', value: 'bar2'}
+                {label: 'foo2', value: 'bar2'},
             ]);
 
             assert.equal(state.getValue(), 'bar1');
@@ -43,7 +43,7 @@ describe('src/selector/state', () => {
             state.setValueList([
                 {label: 'foo1', value: 'bar1'},
                 {label: 'foo2', value: 'bar2', active: true},
-                {label: 'foo3', value: 'bar3'}
+                {label: 'foo3', value: 'bar3'},
             ]);
 
             assert.equal(state.getValue(), 'bar2');
@@ -58,7 +58,7 @@ describe('src/selector/state', () => {
 
             state.setValueList([
                 {label: 'foo1', value: 'bar1'},
-                {label: 'foo2', value: 'bar2', active: true}
+                {label: 'foo2', value: 'bar2', active: true},
             ]);
 
             assert.equal(state.getValue(), 'bar2');
