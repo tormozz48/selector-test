@@ -3,7 +3,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: './demo.ts',
     devServer: {
         contentBase: './'
     },

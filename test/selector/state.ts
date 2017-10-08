@@ -1,7 +1,7 @@
 'use strict';
 
 import {assert} from 'chai';
-import State from '../../src/selector/state';
+import State from '../../src/state';
 
 describe('src/selector/state', () => {
     it('should initialize state with empty options set', () => {

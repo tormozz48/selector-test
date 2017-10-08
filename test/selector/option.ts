@@ -1,7 +1,7 @@
 'use strict';
 
 import {assert} from 'chai';
-import Option from '../../src/selector/option';
+import Option from '../../src/option';
 
 describe('src/selector/option', () => {
     it('should create option with given option data object', () => {

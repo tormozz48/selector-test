@@ -5,8 +5,8 @@ import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as sinonChai from 'sinon-chai';
 
-import State from '../../src/selector/state';
-import Selector from '../../src/selector/index';
+import State from '../../src/state';
+import Selector from '../../src/index';
 
 chai.use(sinonChai);
 
