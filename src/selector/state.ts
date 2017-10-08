@@ -17,6 +17,15 @@ export default class State {
     }
 
     /**
+     * Initialize state
+     * @returns {State}
+     * @static
+     */
+    public static create() {
+        return new State();
+    }
+
+    /**
      * Sets list of selector options
      * @param {Object[]|String[]} values
      */

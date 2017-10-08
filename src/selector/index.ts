@@ -9,7 +9,6 @@ import State from './state';
  */
 export default class Selector {
     public static EVENTS: any = {
-        INIT: 'init',
         BEFORE_SET_VALUE_LIST: 'beforeSetValueList',
         AFTER_SET_VALUE_LIST: 'afterSetValueList',
         BEFORE_SET_VALUE: 'beforeSetValue',
@@ -26,9 +25,13 @@ export default class Selector {
      * @param {String} selectId - jquery selector
      */
     public constructor(selectId: string) {
-        this._element = $(selectId);
-        this._state = new State();
-        this._trigger(Selector.EVENTS.INIT);
+        this._element = this.get$()(selectId);
+        this._state = State.create();
+    }
+
+    //suitable for testing purposes
+    public get$(): any {
+        return $;
     }
 
     /**
@@ -100,7 +103,7 @@ export default class Selector {
         this._trigger(Selector.EVENTS.BEFORE_RENDER);
         this.getElement().empty();
         this._state.getValuesList().forEach((option) => {
-            const $option = $('<option/>')
+            const $option = this.get$()('<option/>')
                 .val(option.value)
                 .text(option.label)
                 .prop('selected', option.isActive());
