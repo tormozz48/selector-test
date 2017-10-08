@@ -10343,11 +10343,11 @@ var index_1 = __webpack_require__(2);
     });
     $('#set-values-list').click(function () {
         selector.setValueList(eval($('#values-list').html()));
-        $('#current-value').html(selector.getValue());
+        $('#current-value').html(selector.getValue().toString());
     });
     $('[id^="switch-value"]').click(function () {
         selector.setValue($(this).attr('name'));
-        $('#current-value').html(selector.getValue());
+        $('#current-value').html(selector.getValue().toString());
     });
 }());
 
@@ -10361,30 +10361,34 @@ var index_1 = __webpack_require__(2);
 Object.defineProperty(exports, "__esModule", { value: true });
 var $ = __webpack_require__(0);
 var state_1 = __webpack_require__(3);
+/**
+ * @class Selector
+ * @description Custom selector component
+ */
 var Selector = /** @class */ (function () {
+    /**
+     * @constructor
+     * @param {String} selectId - jquery selector
+     */
     function Selector(selectId) {
-        this._element = $(selectId);
-        this._state = new state_1.default();
-        this._trigger(Selector.EVENTS.INIT);
+        this._element = this.get$()(selectId);
+        this._state = state_1.default.create();
     }
-    Object.defineProperty(Selector, "EVENTS", {
-        get: function () {
-            return {
-                INIT: 'init',
-                BEFORE_SET_VALUE_LIST: 'beforeSetValueList',
-                AFTER_SET_VALUE_LIST: 'afterSetValueList',
-                BEFORE_SET_VALUE: 'beforeSetValue',
-                AFTER_SET_VALUE: 'afterSetValue',
-                BEFORE_RENDER: 'beforeRender',
-                AFTER_RENDER: 'afterRender',
-            };
-        },
-        enumerable: true,
-        configurable: true
-    });
+    // suitable for testing purposes
+    Selector.prototype.get$ = function () {
+        return $;
+    };
+    /**
+     * Returns native jQuery element
+     * @returns {JQuery}
+     */
     Selector.prototype.getElement = function () {
         return this._element;
     };
+    /**
+     * Sets event listener
+     * @param {Function} listener
+     */
     Selector.prototype.setListener = function (listener) {
         var _this = this;
         var events = Selector.EVENTS;
@@ -10398,36 +10402,66 @@ var Selector = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Sets option value list
+     * @param {Object[]} values
+     */
     Selector.prototype.setValueList = function (values) {
         this._trigger(Selector.EVENTS.BEFORE_SET_VALUE_LIST, values);
         this._state.setValueList(values);
         this._render();
         this._trigger(Selector.EVENTS.AFTER_SET_VALUE_LIST, values);
     };
+    /**
+     * Sets selector value
+     * @param {String|Number} value
+     */
     Selector.prototype.setValue = function (value) {
         this._trigger(Selector.EVENTS.BEFORE_SET_VALUE, value);
         this._state.setValue(value);
         this._render();
         this._trigger(Selector.EVENTS.AFTER_SET_VALUE, value);
     };
+    /**
+     * Returns selector value
+     * @returns {String|Number|null}
+     */
     Selector.prototype.getValue = function () {
         return this._state.getValue();
     };
+    /**
+     * Triggers given component event with params
+     * @param {String} event name
+     * @param {Array<*>} [params] event data
+     * @private
+     */
     Selector.prototype._trigger = function (event, params) {
         this.getElement().trigger(event, params);
     };
+    /**
+     * Component render method
+     * @private
+     */
     Selector.prototype._render = function () {
         var _this = this;
         this._trigger(Selector.EVENTS.BEFORE_RENDER);
         this.getElement().empty();
         this._state.getValuesList().forEach(function (option) {
-            var $option = $('<option/>')
+            var $option = _this.get$()('<option/>')
                 .val(option.value)
                 .text(option.label)
                 .prop('selected', option.isActive());
             _this.getElement().append($option);
         });
         this._trigger(Selector.EVENTS.AFTER_RENDER);
+    };
+    Selector.EVENTS = {
+        BEFORE_SET_VALUE_LIST: 'beforeSetValueList',
+        AFTER_SET_VALUE_LIST: 'afterSetValueList',
+        BEFORE_SET_VALUE: 'beforeSetValue',
+        AFTER_SET_VALUE: 'afterSetValue',
+        BEFORE_RENDER: 'beforeRender',
+        AFTER_RENDER: 'afterRender',
     };
     return Selector;
 }());
@@ -10442,30 +10476,63 @@ exports.default = Selector;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var option_1 = __webpack_require__(4);
+/**
+ * @class State
+ * @description Represents selector state
+ */
 var State = /** @class */ (function () {
+    /**
+     * @constructor
+     */
     function State() {
         this._options = [];
     }
+    /**
+     * Initialize state
+     * @returns {State}
+     * @static
+     */
+    State.create = function () {
+        return new State();
+    };
+    /**
+     * Sets list of selector options
+     * @param {Object[]|String[]} values
+     */
     State.prototype.setValueList = function (values) {
         this._options = values.map(function (v) { return new option_1.default(v); });
+        var hasActiveOption = this.getValuesList().some(function (option) { return option.isActive(); });
+        if (!hasActiveOption && this.getValuesList().length) {
+            this._options[0].makeActive();
+        }
     };
+    /**
+     * Returns list of selector options
+     * @returns {Array<Option>}
+     */
     State.prototype.getValuesList = function () {
         return this._options;
     };
+    /**
+     * Sets selector value
+     * @param {String|Number} value
+     */
     State.prototype.setValue = function (value) {
-        this._options.forEach(function (option) { return option.makeInactive(); });
-        this._options
-            .filter(function (option) { return option.hasValue(value); })
-            .map(function (option) { return option.makeActive(); });
+        this.getValuesList().forEach(function (option) {
+            option.hasValue(value) ? option.makeActive() : option.makeInactive();
+        });
     };
+    /**
+     * Returns selector value
+     * @returns {String|Number|null}
+     */
     State.prototype.getValue = function () {
-        var activeOption = this._options.filter(function (option) { return option.isActive(); })[0];
+        var activeOption = this.getValuesList().filter(function (option) { return option.isActive(); })[0];
         return activeOption ? activeOption.value : null;
     };
     return State;
 }());
 exports.default = State;
-;
 
 
 /***/ }),
@@ -10475,7 +10542,15 @@ exports.default = State;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * @class Option
+ * @description Represents selector option model
+ */
 var Option = /** @class */ (function () {
+    /**
+     * @constructor
+     * @param {Object|String} option data
+     */
     function Option(option) {
         if (typeof option === 'string') {
             option = { label: option, value: option };
@@ -10485,6 +10560,10 @@ var Option = /** @class */ (function () {
         this._active = option.active;
     }
     Object.defineProperty(Option.prototype, "label", {
+        /**
+         * Returns option label
+         * @returns {String}
+         */
         get: function () {
             return this._label;
         },
@@ -10492,28 +10571,46 @@ var Option = /** @class */ (function () {
         configurable: true
     });
     Object.defineProperty(Option.prototype, "value", {
+        /**
+         * Returns option value
+         * @returns {String|Number}
+         */
         get: function () {
             return this._value;
         },
         enumerable: true,
         configurable: true
     });
+    /**
+     * Returns true if option value equals to given. Otherwise returns false
+     * @param {String|Number} value
+     * @returns {Boolean}
+     */
     Option.prototype.hasValue = function (value) {
         return this.value === value;
     };
+    /**
+     * Returns true if option is active. Otherwise returns false
+     * @returns {Boolean}
+     */
     Option.prototype.isActive = function () {
         return Boolean(this._active);
     };
+    /**
+     * Make option active
+     */
     Option.prototype.makeActive = function () {
         this._active = true;
     };
+    /**
+     * Make option inactive
+     */
     Option.prototype.makeInactive = function () {
         this._active = false;
     };
     return Option;
 }());
 exports.default = Option;
-;
 
 
 /***/ })
