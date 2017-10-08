@@ -69,4 +69,4 @@ export default class Option {
     public makeInactive(): void {
         this._active = false;
     }
-};
+}

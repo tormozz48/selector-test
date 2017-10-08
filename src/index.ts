@@ -29,7 +29,7 @@ export default class Selector {
         this._state = State.create();
     }
 
-    //suitable for testing purposes
+    // suitable for testing purposes
     public get$(): any {
         return $;
     }
@@ -46,12 +46,12 @@ export default class Selector {
      * Sets event listener
      * @param {Function} listener
      */
-    public setListener(listener: Function): void {
+    public setListener(listener: () => void): void {
         const events = Selector.EVENTS;
         Object.keys(events).forEach((eventKey) => {
             this.getElement().on(
                 events[eventKey],
-                (event: any, ...data: Array<any>) => listener(event.type, data));
+                (event: any, ...data: any[]) => listener(event.type, data));
         });
     }
 
@@ -59,7 +59,7 @@ export default class Selector {
      * Sets option value list
      * @param {Object[]} values
      */
-    public setValueList(values: Array<Object>): void {
+    public setValueList(values: object[]): void {
         this._trigger(Selector.EVENTS.BEFORE_SET_VALUE_LIST, values);
         this._state.setValueList(values);
         this._render();
